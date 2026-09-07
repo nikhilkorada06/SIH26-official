@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only server.ts",
+    "demo": "ts-node --transpile-only src/scripts/demo.ts",
+    "demo:mock": "ts-node --transpile-only src/__tests__/mock-department-servers.ts",
+    "self-check:matcher": "ts-node --transpile-only src/scripts/matcher-self-check.ts",
+    "self-check:reliability": "ts-node --transpile-only src/scripts/reliability-self-check.ts",
+    "self-check:consent": "ts-node --transpile-only src/scripts/consent-expiry-self-check.ts",
+    "self-check:audit": "ts-node --transpile-only src/scripts/audit-self-check.ts",
+    "self-check:security": "ts-node --transpile-only src/scripts/security-self-check.ts",
+    "self-check:e2e": "ts-node --transpile-only src/scripts/e2e-self-check.ts",
+    "self-check:all": "npm run self-check:matcher && npm run self-check:reliability && npm run self-check:consent && npm run self-check:audit && npm run self-check:security && npm run self-check:e2e"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Smart India Hackathon backend",
+  "dependencies": {
+    "axios": "^1.20.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.4",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.4.1",
+    "@types/xml2js": "^0.4.14",
+    "nodemon": "^3.1.14",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
