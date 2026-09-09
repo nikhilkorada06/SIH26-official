@@ -7,6 +7,7 @@ import Application, {
 import authenticateToken from '../middleware/auth';
 import requireRole from '../middleware/role';
 import { auditService } from '../audit/audit.service';
+import { createNotification } from '../services/notification.service';
 
 interface CreateApplicationBody {
   jobId?: unknown;
@@ -104,6 +105,21 @@ router.post(
           applicationNumber: application.applicationNumber,
           department: application.department
         }
+      });
+
+      await createNotification({
+        userId: req.user!.id,
+        type: 'application',
+        title: 'Application Submitted',
+        message: `${application.position} was submitted successfully.`,
+        applicationId: application._id.toString()
+      });
+      await createNotification({
+        userId: req.user!.id,
+        type: 'consent',
+        title: 'Consent Required',
+        message: 'Grant consent before department verification can begin.',
+        applicationId: application._id.toString()
       });
 
       return res.status(201).json({
@@ -519,6 +535,14 @@ router.patch(
           previousStatus,
           newStatus: status
         }
+      });
+
+      await createNotification({
+        userId: application.citizenId.toString(),
+        type: 'application',
+        title: 'Application Status Updated',
+        message: `Your application is now ${status.replace('_', ' ')}.`,
+        applicationId: application._id.toString()
       });
 
       if (status === 'verified') {

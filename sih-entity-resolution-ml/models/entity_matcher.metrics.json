@@ -1,0 +1,50 @@
+{
+  "n_train": 65280,
+  "n_test": 16320,
+  "features": [
+    "name_similarity",
+    "dob_match",
+    "dob_day_diff",
+    "phone_match",
+    "email_match",
+    "address_similarity",
+    "dob_unknown"
+  ],
+  "feature_weights": {
+    "name_similarity": -0.0012302299620324565,
+    "dob_match": 0.05487774477999589,
+    "dob_day_diff": 0.11262455315272338,
+    "phone_match": 1.592887159293278,
+    "email_match": 1.5928871592920781,
+    "address_similarity": 0.039223177371390174,
+    "dob_unknown": 0.6819627386641005
+  },
+  "roc_auc": 1.0,
+  "classification_report": {
+    "0": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 16080.0
+    },
+    "1": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 240.0
+    },
+    "accuracy": 1.0,
+    "macro avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 16320.0
+    },
+    "weighted avg": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 16320.0
+    }
+  }
+}

@@ -17,6 +17,8 @@ export interface ConsentDocument extends Document {
   grantedAt: Date;
   expiresAt?: Date;
   revokedAt?: Date;
+  purpose?: string;
+  dataSource?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -67,7 +69,9 @@ const consentSchema = new Schema<ConsentDocument>(
 
     revokedAt: {
       type: Date
-    }
+    },
+    purpose: { type: String, trim: true, maxlength: 300 },
+    dataSource: { type: String, trim: true, maxlength: 150 }
   },
   {
     timestamps: true

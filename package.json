@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "backend"
+    "backend",
+    "integration-engine"
   ],
   "scripts": {
     "dev": "npm run dev --workspace=backend",
-    "build": "npm run build --workspace=backend",
+    "build": "npm run build --workspace=integration-engine && npm run build --workspace=backend",
     "start": "npm run start --workspace=backend"
   },
   "devDependencies": {

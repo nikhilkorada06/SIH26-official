@@ -9,6 +9,7 @@ import User from '../models/User';
 import { IntegrationEngine, DepartmentDataRequest, CanonicalCitizenData } from './integration-engine.interface';
 import { EntityMatcher, MatchRequest, MatchResult } from './ml-matcher.interface';
 import { VERIFICATION_CONFIDENCE_THRESHOLD } from '../config/verification';
+import { createNotification } from './notification.service';
 import { auditService, AuditContext } from '../audit/audit.service';
 
 interface VerificationOptions {
@@ -39,6 +40,86 @@ export class VerificationService {
   constructor(options: VerificationOptions) {
     this.integrationEngine = options.integrationEngine;
     this.entityMatcher = options.entityMatcher;
+  }
+
+  async getDepartmentData(
+    applicationId: string,
+    requestedCategories: string[],
+    departmentCodes: string[],
+    context?: AuditContext
+  ): Promise<{ department: string; data: CanonicalCitizenData; match: MatchResult }> {
+    const application = await Application.findById(applicationId);
+    if (!application) {
+      throw new VerificationError('Application not found', 404);
+    }
+
+    const user = await User.findById(application.citizenId);
+    if (!user) {
+      throw new VerificationError('Application citizen not found', 404);
+    }
+
+    const consent = await Consent.findOne({
+      citizenId: application.citizenId,
+      applicationId: application._id
+    });
+
+    if (!consent || consent.status !== 'active' || (consent.expiresAt && consent.expiresAt <= new Date())) {
+      await auditService.record({
+        actorId: context?.actorId ?? null,
+        ...(context?.actorRole && { actorRole: context.actorRole }),
+        action: 'DATA_ACCESS_DENIED',
+        resource: 'consent',
+        applicationId: application._id.toString(),
+        ...(consent && { consentId: consent._id.toString() }),
+        requestId: context?.requestId,
+        outcome: 'DENIED',
+        metadata: { reason: !consent ? 'missing_consent' : `consent_${consent.status}` }
+      });
+      throw new VerificationError('Active consent is required to fetch department data', 403);
+    }
+
+    if (!requestedCategories.every(category => consent.dataCategories.includes(category as ConsentDataCategory))) {
+      throw new VerificationError('Consent does not cover requested data categories', 403);
+    }
+
+    for (const departmentCode of departmentCodes) {
+      if (!(await this.integrationEngine.isDepartmentAvailable(departmentCode))) {
+        throw new VerificationError(`Department ${departmentCode} integration unavailable`, 503);
+      }
+    }
+
+    const data = await this.integrationEngine.getCitizenData({
+      departmentCode: departmentCodes[0]!,
+      citizenIdentifier: this.buildCitizenIdentifier(user, application),
+      requestedCategories
+    });
+
+    if (!data) {
+      throw new VerificationError('No citizen data found in the configured department', 404);
+    }
+
+    const match = await this.entityMatcher.match({
+      sourceData: data,
+      applicationData: this.buildApplicationCanonicalData(user, application)
+    });
+    if (!match.samePerson || match.confidence < VERIFICATION_CONFIDENCE_THRESHOLD) {
+      throw new VerificationError('Department record did not match the authenticated citizen', 404);
+    }
+
+    await auditService.record({
+      actorId: context?.actorId ?? null,
+      ...(context?.actorRole && { actorRole: context.actorRole }),
+      action: 'DATA_ACCESS_ALLOWED',
+      resource: 'department',
+      applicationId: application._id.toString(),
+      department: departmentCodes[0],
+      consentId: consent._id.toString(),
+      purpose: 'Fetch citizen data for application form',
+      requestId: context?.requestId,
+      outcome: 'SUCCESS'
+    });
+
+    return { department: departmentCodes[0]!, data, match };
   }
 
   async verifyApplication(
@@ -311,6 +392,16 @@ export class VerificationService {
           }
         });
       }
+
+      await createNotification({
+        userId: application.citizenId.toString(),
+        type: 'verification',
+        title: matched ? 'Verification Completed' : 'Verification Rejected',
+        message: matched
+          ? 'Your cross-department verification completed successfully.'
+          : 'Your cross-department verification did not meet the match threshold.',
+        applicationId: application._id.toString()
+      });
 
       return {
         verification: {

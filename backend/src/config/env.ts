@@ -6,17 +6,23 @@ export interface AppConfig {
   mockEduPort: number;
   mockEmpPort: number;
   isProduction: boolean;
+  cloudinaryConfigured: boolean;
 }
 
 export function validateAndLoadConfig(): AppConfig {
   const nodeEnv = process.env.NODE_ENV || 'development';
   const isProduction = nodeEnv === 'production';
 
-  const port = Number(process.env.PORT) || 5000;
+  const port = Number(process.env.PORT) || 5003;
   const mongoUri = process.env.MONGODB_URI;
   const jwtSecret = process.env.JWT_SECRET;
   const mockEduPort = Number(process.env.MOCK_EDU_PORT) || 4001;
   const mockEmpPort = Number(process.env.MOCK_EMP_PORT) || 4002;
+  const cloudinaryConfigured = Boolean(
+    process.env.CLOUDINARY_CLOUD_NAME &&
+    process.env.CLOUDINARY_API_KEY &&
+    process.env.CLOUDINARY_API_SECRET
+  );
 
   if (isProduction) {
     if (!mongoUri) {
@@ -24,6 +30,9 @@ export function validateAndLoadConfig(): AppConfig {
     }
     if (!jwtSecret || jwtSecret === 'replace-this-with-a-long-random-secret' || jwtSecret.length < 16) {
       throw new Error('FATAL: A secure JWT_SECRET of at least 16 characters must be configured in production');
+    }
+    if (!cloudinaryConfigured) {
+      throw new Error('FATAL: Cloudinary credentials must be configured in production');
     }
   } else {
     if (!mongoUri) {
@@ -41,6 +50,7 @@ export function validateAndLoadConfig(): AppConfig {
     nodeEnv,
     mockEduPort,
     mockEmpPort,
-    isProduction
+    isProduction,
+    cloudinaryConfigured
   };
 }

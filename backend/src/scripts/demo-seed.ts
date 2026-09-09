@@ -34,7 +34,7 @@ async function upsertUser(
   const hashed = await bcrypt.hash(password, 10);
   await User.findOneAndUpdate(
     { email },
-    { name, email, password: hashed, role, ...extra },
+    { name, email, password: hashed, role, isVerified: true, ...extra },
     { upsert: true, new: true }
   ).exec();
 }
@@ -67,6 +67,8 @@ export async function seedDemoData(): Promise<void> {
     fieldMappings: [
       { sourceField: 'student_name', canonicalField: 'name', transform: 'trim' },
       { sourceField: 'dob', canonicalField: 'dateOfBirth', transform: 'date' },
+      { sourceField: 'phone', canonicalField: 'phone', transform: 'trim' },
+      { sourceField: 'email', canonicalField: 'email', transform: 'lowercase' },
       { sourceField: 'roll_no', canonicalField: 'registrationNumber', transform: 'trim' },
       { sourceField: 'course_name', canonicalField: 'qualification', transform: 'trim' },
       { sourceField: 'marks', canonicalField: 'score', transform: 'number' }

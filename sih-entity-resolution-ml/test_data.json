@@ -1,0 +1,101 @@
+{
+  "current_person": {
+    "name": "Rahul Sharma",
+    "dob": "1998-05-12",
+    "phone": "9876543210",
+    "email": "rahul.sharma@gmail.com",
+    "address": "Agartala Tripura"
+  },
+
+  "candidates": [
+    {
+      "education_id": "EDU001",
+      "name": "Rahul Sharm",
+      "dob": "12/05/1998",
+      "phone": "+91 9876543210",
+      "email": "rahul.sharma@gmail.com",
+      "address": "Agartala Tripura"
+    },
+
+    {
+      "education_id": "EDU002",
+      "name": "Rahul Sharma",
+      "dob": "1998-05-12",
+      "phone": "9123456789",
+      "email": "different@gmail.com",
+      "address": "Agartala Tripura"
+    },
+
+    {
+      "education_id": "EDU003",
+      "name": "Amit Kumar",
+      "dob": "1997-08-21",
+      "phone": "9876543211",
+      "email": "amit@gmail.com",
+      "address": "Kolkata West Bengal"
+    },
+
+    {
+      "education_id": "EDU004",
+      "name": "Rahul K Sharma",
+      "dob": "1998-05-12",
+      "phone": "9876543210",
+      "email": "rahul.sharma@gmail.com",
+      "address": "Agartala Tripura"
+    },
+
+    {
+      "education_id": "EDU005",
+      "name": "Rohit Sharma",
+      "dob": "1998-05-12",
+      "phone": "9876543212",
+      "email": "rohit@gmail.com",
+      "address": "Agartala Tripura"
+    },
+
+    {
+      "education_id": "EDU006",
+      "name": "Rahul Sharma",
+      "dob": "1998-05-13",
+      "phone": "9876543210",
+      "email": "rahul.sharma@gmail.com",
+      "address": "Agartala Tripura"
+    },
+
+    {
+      "education_id": "EDU007",
+      "name": "Suresh Das",
+      "dob": "1996-11-10",
+      "phone": "9123456780",
+      "email": "suresh@gmail.com",
+      "address": "Imphal Manipur"
+    },
+
+    {
+      "education_id": "EDU008",
+      "name": "Rahul Sharma",
+      "dob": "12/05/1998",
+      "phone": "9876543210",
+      "email": "rahul.s@gmail.com",
+      "address": "Agartala, Tripura"
+    },
+
+    {
+      "education_id": "EDU009",
+      "name": "Rahul Sharma",
+      "dob": "1990-01-15",
+      "phone": "9999999999",
+      "email": "another@gmail.com",
+      "address": "Delhi India"
+    },
+
+    {
+      "education_id": "EDU010",
+      "name": "Ankit Singh",
+      "dob": "1995-03-18",
+      "phone": "9876543215",
+      "email": "ankit@gmail.com",
+      "address": "Guwahati Assam"
+    }
+  ]
+}

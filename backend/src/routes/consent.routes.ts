@@ -8,11 +8,14 @@ import Application from '../models/Application';
 import authenticateToken from '../middleware/auth';
 import requireRole from '../middleware/role';
 import { auditService } from '../audit/audit.service';
+import { createNotification } from '../services/notification.service';
 
 interface CreateConsentBody {
   applicationId?: unknown;
   dataCategories?: unknown;
   expiresAt?: unknown;
+  purpose?: unknown;
+  dataSource?: unknown;
 }
 
 const router = Router();
@@ -46,7 +49,7 @@ router.post(
     const {
       applicationId,
       dataCategories,
-      expiresAt
+      expiresAt, purpose, dataSource
     } = req.body;
 
     if (
@@ -134,6 +137,8 @@ router.post(
           ...new Set(dataCategories)
         ],
         status: 'active',
+        ...(typeof purpose === 'string' && purpose.trim() && { purpose: purpose.trim().slice(0, 300) }),
+        ...(typeof dataSource === 'string' && dataSource.trim() && { dataSource: dataSource.trim().slice(0, 150) }),
         ...(parsedExpiresAt && {
           expiresAt: parsedExpiresAt
         })
@@ -147,12 +152,20 @@ router.post(
         resourceId: consent._id.toString(),
         applicationId,
         consentId: consent._id.toString(),
-        purpose: 'Government data verification',
+        purpose: typeof purpose === 'string' && purpose.trim() ? purpose.trim() : 'Government data verification',
         requestId: req.requestId,
         outcome: 'SUCCESS',
         metadata: {
           dataCategories: consent.dataCategories
         }
+      });
+
+      await createNotification({
+        userId: req.user!.id,
+        type: 'consent',
+        title: 'Consent Approved',
+        message: 'Digital consent is active for this application.',
+        applicationId
       });
 
       return res.status(201).json({
@@ -289,6 +302,14 @@ router.patch(
         metadata: {
           dataCategories: consent.dataCategories
         }
+      });
+
+      await createNotification({
+        userId: req.user!.id,
+        type: 'consent',
+        title: 'Consent Revoked',
+        message: 'Department access has been revoked for this application.',
+        applicationId
       });
 
       return res.json({

@@ -1,6 +1,7 @@
 import { Document, Schema, Types, model } from 'mongoose';
 
 export type ApplicationStatus =
+  | 'draft'
   | 'submitted'
   | 'under_review'
   | 'verified'
@@ -14,7 +15,15 @@ export interface ApplicationDocument extends Document {
   department: string;
   position: string;
   status: ApplicationStatus;
-  submittedAt: Date;
+  submittedAt?: Date;
+  applicationKind: 'standard' | 'employment';
+  employmentJobId?: Types.ObjectId;
+  formData?: Record<string, unknown>;
+  fetchedFields: string[];
+  manuallyEnteredFields: string[];
+  consentId?: Types.ObjectId;
+  externalSubmissionStatus: 'NOT_CONFIGURED' | 'PENDING_EXTERNAL_SYNC' | 'EXTERNAL_SYNCED' | 'EXTERNAL_SYNC_FAILED';
+  externalApplicationId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +65,7 @@ const applicationSchema = new Schema<ApplicationDocument>(
     status: {
       type: String,
       enum: [
+        'draft',
         'submitted',
         'under_review',
         'verified',
@@ -67,8 +77,22 @@ const applicationSchema = new Schema<ApplicationDocument>(
 
     submittedAt: {
       type: Date,
-      default: Date.now
-    }
+      default: function (this: ApplicationDocument) {
+        return this.status === 'draft' ? undefined : new Date();
+      }
+    },
+    applicationKind: { type: String, enum: ['standard', 'employment'], default: 'standard', index: true },
+    employmentJobId: { type: Schema.Types.ObjectId, ref: 'EmploymentJob', index: true },
+    formData: { type: Schema.Types.Mixed, default: {} },
+    fetchedFields: { type: [String], default: [] },
+    manuallyEnteredFields: { type: [String], default: [] },
+    consentId: { type: Schema.Types.ObjectId, ref: 'Consent' },
+    externalSubmissionStatus: {
+      type: String,
+      enum: ['NOT_CONFIGURED', 'PENDING_EXTERNAL_SYNC', 'EXTERNAL_SYNCED', 'EXTERNAL_SYNC_FAILED'],
+      default: 'NOT_CONFIGURED'
+    },
+    externalApplicationId: { type: String, trim: true }
   },
   {
     timestamps: true

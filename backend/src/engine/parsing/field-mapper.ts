@@ -1,6 +1,7 @@
 import { FieldMapping } from '../../models/Integration';
 import { CanonicalCitizenData } from '../../services/integration-engine.interface';
 import { EngineError } from '../errors/engine-errors';
+import { setNestedValue } from 'integration-engine';
 
 export class FieldMapper {
   static map(sourceData: unknown, fieldMappings: FieldMapping[]): CanonicalCitizenData {
@@ -16,7 +17,7 @@ export class FieldMapper {
         transformedValue = this.applyTransform(sourceValue, mapping.transform);
       }
 
-      result[mapping.canonicalField] = transformedValue as CanonicalCitizenData[keyof CanonicalCitizenData];
+      setNestedValue(result, mapping.canonicalField, transformedValue);
     }
 
     return result;

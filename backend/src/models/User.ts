@@ -6,9 +6,18 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   role: UserRole;
+  isVerified: boolean;
   dateOfBirth?: string;
   phone?: string;
   registrationNumber?: string;
+  college?: string;
+  gender?: string;
+  address?: string;
+  district?: string;
+  state?: string;
+  pincode?: string;
+  education?: string;
+  category?: string;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>({
@@ -34,6 +43,10 @@ const userSchema = new mongoose.Schema<UserDocument>({
     enum: ['citizen', 'department_officer', 'admin'],
     default: 'citizen'
   },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
   dateOfBirth: {
     type: String,
     trim: true
@@ -45,7 +58,15 @@ const userSchema = new mongoose.Schema<UserDocument>({
   registrationNumber: {
     type: String,
     trim: true
-  }
+  },
+  college: { type: String, trim: true },
+  gender: { type: String, trim: true },
+  address: { type: String, trim: true },
+  district: { type: String, trim: true },
+  state: { type: String, trim: true },
+  pincode: { type: String, trim: true },
+  education: { type: String, trim: true },
+  category: { type: String, trim: true }
 });
 
 const User: Model<UserDocument> = mongoose.model<UserDocument>('User', userSchema);

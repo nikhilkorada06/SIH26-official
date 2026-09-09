@@ -67,6 +67,52 @@ router.post(
   }
 );
 
+router.get(
+  '/:id/department-data',
+  authenticateToken,
+  async (req: Request<{ id: string }>, res: Response) => {
+    const { id } = req.params;
+
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ message: 'Invalid application ID' });
+    }
+
+    try {
+      const application = await Application.findById(id).select('citizenId department');
+      if (!application) {
+        return res.status(404).json({ message: 'Application not found' });
+      }
+
+      const isOwner = req.user?.role === 'citizen' && application.citizenId.toString() === req.user.id;
+      const isOfficerOrAdmin = req.user?.role === 'admin' || req.user?.role === 'department_officer';
+      if (!isOwner && !isOfficerOrAdmin) {
+        return res.status(403).json({ message: 'Access denied' });
+      }
+
+      const { requestedCategories, departmentCodes } = await determineVerificationConfig(application.department);
+      const result = await verificationService.getDepartmentData(
+        id,
+        requestedCategories,
+        departmentCodes,
+        {
+          actorId: req.user?.id,
+          actorRole: req.user?.role,
+          requestId: req.requestId
+        }
+      );
+
+      return res.json({
+        applicationId: id,
+        department: result.department,
+        data: result.data,
+        match: result.match
+      });
+    } catch (error: unknown) {
+      handleVerificationError(error, res);
+    }
+  }
+);
+
 async function determineVerificationConfig(departmentName: string): Promise<{ requestedCategories: string[]; departmentCodes: string[] }> {
   const escaped = escapeRegExp(departmentName.trim());
   let department = await Department.findOne({

@@ -18,6 +18,8 @@ educationApp.get('/v1/students/:id', (req, res) => {
       data: {
         student_name: 'Rahul Kumar',
         dob: '1995-03-15',
+        phone: '+919800001111',
+        email: 'rahul@test.com',
         roll_no: 'EDU2024001234',
         course_name: 'Bachelor of Technology',
         marks: 85.5,
@@ -30,6 +32,8 @@ educationApp.get('/v1/students/:id', (req, res) => {
       data: {
         student_name: 'Priya Sharma',
         dob: '1993-07-22',
+        phone: '+919800002222',
+        email: 'priya@test.com',
         roll_no: 'EDU2023005678',
         course_name: 'Master of Science',
         marks: 92.0,

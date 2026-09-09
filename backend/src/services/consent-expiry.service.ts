@@ -1,5 +1,6 @@
 import Consent, { ConsentDocument } from '../models/Consent';
 import { auditService } from '../audit/audit.service';
+import { createNotification } from './notification.service';
 
 const DEFAULT_CHECK_INTERVAL_MS = 60_000; // 1 minute
 
@@ -50,6 +51,13 @@ export class ConsentExpiryService {
             expiredAt: new Date(),
             reason: 'automated_expiry_job'
           }
+        });
+        await createNotification({
+          userId: consent.citizenId.toString(),
+          type: 'consent',
+          title: 'Consent Expired',
+          message: 'Consent for an application has expired.',
+          applicationId: consent.applicationId.toString()
         });
       }
 

@@ -9,6 +9,10 @@ import consentRoutes from './src/routes/consent.routes';
 import departmentRoutes from './src/routes/department.routes';
 import integrationRoutes from './src/routes/integration.routes';
 import auditRoutes from './src/routes/audit.routes';
+import documentRoutes from './src/routes/document.routes';
+import notificationRoutes from './src/routes/notification.routes';
+import employmentRoutes from './src/routes/employment.routes';
+import profileRoutes from './src/routes/profile.routes';
 
 import requestId from './src/middleware/request-id';
 import { securityHeadersMiddleware } from './src/middleware/security-headers';
@@ -32,11 +36,15 @@ app.use('/api', generalRateLimiter);
 // Domain route registrations
 app.use('/api/auth', authRoutes);
 app.use('/api/applications', verificationRoutes);
+app.use('/api/applications', documentRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/consent', consentRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/integrations', integrationRoutes);
 app.use('/api/audit', auditRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/employment', employmentRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.get('/health', (req: Request, res: Response) => {
   res.json({

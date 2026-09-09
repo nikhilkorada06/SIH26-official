@@ -1,5 +1,6 @@
 import { EntityMatcher, MatchRequest, MatchResult } from './ml-matcher.interface';
 import { VERIFICATION_CONFIDENCE_THRESHOLD } from '../config/verification';
+import { PythonEntityMatcher } from './python-entity-matcher';
 
 interface FieldComparator {
   weight: number;
@@ -89,4 +90,7 @@ export class EntityMatcherImpl implements EntityMatcher {
   }
 }
 
-export const entityMatcher: EntityMatcher = new EntityMatcherImpl();
+export const entityMatcher: EntityMatcher =
+  process.env.ML_MATCHER === 'python'
+    ? new PythonEntityMatcher()
+    : new EntityMatcherImpl();
