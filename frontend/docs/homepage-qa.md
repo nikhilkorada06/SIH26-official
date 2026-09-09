@@ -97,7 +97,7 @@ The final desktop carousel-width refinement was additionally checked with arrow/
 ## Remaining limitations
 
 - No known failures in the homepage checks above. Browser verification used Chromium; Safari/Firefox and physical devices were not tested.
-- Login/registration and other existing routes were checked for rendering. No live OTP messages, authenticated application submissions, or backend end-to-end flows were exercised. Backend/auth/API files were not changed.
+- Login/registration and other existing routes were checked for rendering during the original homepage pass. Authentication and backend flows are covered by their dedicated self-checks.
 - The language selector now translates the existing navigation dictionary and persists the preference. Most homepage body copy remains English, with existing Marathi service/category labels; a full content translation was outside this correction pass.
 - Service/category links use the existing directory and documents pages; this UI pass does not implement new backend certificate services. Department update cards link to the official public websites.
 - Original banner images are unchanged. Their wide proportions are retained on mobile; text embedded in the supplied second image is naturally smaller there.

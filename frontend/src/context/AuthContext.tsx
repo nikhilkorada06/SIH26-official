@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, LoginPayload, RegisterPayload, VerifyOtpPayload } from '../types/auth.types';
+import { User, LoginPayload, RegisterPayload } from '../types/auth.types';
 import { authApi } from '../api/auth.api';
 import { getStoredToken, setStoredToken, removeStoredToken } from '../api/client';
 
@@ -9,9 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (payload: LoginPayload) => Promise<User>;
-  registerInit: (payload: RegisterPayload) => Promise<{ requiresOtp: boolean; email?: string; userId?: string }>;
-  registerVerify: (payload: VerifyOtpPayload) => Promise<User>;
-  resendRegisterOtp: (email: string) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<User>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -57,22 +55,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return res.user;
   };
 
-  const registerInit = async (payload: RegisterPayload) => {
+  const register = async (payload: RegisterPayload) => {
     const res = await authApi.register(payload);
-    return {
-      requiresOtp: res.requiresOtp,
-      email: res.email || payload.email,
-      userId: res.userId
-    };
-  };
-
-  const registerVerify = async (payload: VerifyOtpPayload) => {
-    const res = await authApi.verifyRegisterOtp(payload);
+    setStoredToken(res.token);
+    setToken(res.token);
+    setUser(res.user);
     return res.user;
-  };
-
-  const resendRegisterOtp = async (email: string) => {
-    await authApi.resendRegisterOtp({ email });
   };
 
   const logout = () => {
@@ -89,9 +77,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated: !!user && !!token,
         isLoading,
         login,
-        registerInit,
-        registerVerify,
-        resendRegisterOtp,
+        register,
         logout,
         refreshUser
       }}

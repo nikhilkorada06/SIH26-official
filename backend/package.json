@@ -15,8 +15,8 @@
     "self-check:audit": "ts-node --transpile-only src/scripts/audit-self-check.ts",
     "self-check:security": "ts-node --transpile-only src/scripts/security-self-check.ts",
     "self-check:e2e": "ts-node --transpile-only src/scripts/e2e-self-check.ts",
-    "self-check:all": "npm run self-check:matcher && npm run self-check:reliability && npm run self-check:consent && npm run self-check:audit && npm run self-check:security && npm run self-check:otp && npm run self-check:e2e",
-    "self-check:otp": "ts-node --transpile-only src/scripts/otp-auth-self-check.ts"
+    "self-check:all": "npm run self-check:matcher && npm run self-check:reliability && npm run self-check:consent && npm run self-check:audit && npm run self-check:security && npm run self-check:auth && npm run self-check:e2e",
+    "self-check:auth": "ts-node --transpile-only src/scripts/auth-self-check.ts"
     ,"seed:employment": "ts-node --transpile-only src/scripts/seed-employment-jobs.ts"
     ,"seed:demo-citizen": "ts-node --transpile-only src/scripts/seed-demo-citizen.ts"
   },

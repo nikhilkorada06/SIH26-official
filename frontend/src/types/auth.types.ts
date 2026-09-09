@@ -22,9 +22,7 @@ export interface RegisterPayload {
 
 export interface RegisterResponse {
   message: string;
-  userId?: string;
-  email?: string;
-  requiresOtp: boolean;
+  token: string;
   user: User;
 }
 
@@ -35,28 +33,11 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   message: string;
-  requiresOtp: boolean;
   token: string;
   user: User;
   userId?: string;
   email?: string;
   requiresVerification?: boolean;
-}
-
-export interface VerifyOtpPayload {
-  email?: string;
-  userId?: string;
-  otp: string;
-}
-
-export interface VerifyRegisterOtpResponse {
-  message: string;
-  user: User;
-}
-
-export interface ResendOtpPayload {
-  email?: string;
-  userId?: string;
 }
 
 export interface AuthState {

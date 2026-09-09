@@ -34,7 +34,6 @@ async function waitForServer(): Promise<void> {
 async function login(email: string, password: string): Promise<string> {
   const initRes = await axios.post(`${baseURL}/api/auth/login`, { email, password });
   assert.strictEqual(initRes.status, 200);
-  assert.strictEqual(initRes.data.requiresOtp, false);
   assert.ok(initRes.data.token, 'Token must be returned after password verification');
   return initRes.data.token as string;
 }

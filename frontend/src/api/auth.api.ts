@@ -4,28 +4,13 @@ import {
   RegisterResponse,
   LoginPayload,
   LoginResponse,
-  VerifyOtpPayload,
-  VerifyRegisterOtpResponse,
-  ResendOtpPayload,
   User
 } from '../types/auth.types';
 
 export const authApi = {
-  // Step 1: Register unverified account
+  // Create the account and establish its authenticated session
   async register(payload: RegisterPayload): Promise<RegisterResponse> {
     const { data } = await apiClient.post<RegisterResponse>('/auth/register', payload);
-    return data;
-  },
-
-  // Step 2: Verify registration OTP & mark account verified
-  async verifyRegisterOtp(payload: VerifyOtpPayload): Promise<VerifyRegisterOtpResponse> {
-    const { data } = await apiClient.post<VerifyRegisterOtpResponse>('/auth/register/verify-otp', payload);
-    return data;
-  },
-
-  // Resend registration OTP
-  async resendRegisterOtp(payload: ResendOtpPayload): Promise<{ message: string }> {
-    const { data } = await apiClient.post<{ message: string }>('/auth/register/resend-otp', payload);
     return data;
   },
 

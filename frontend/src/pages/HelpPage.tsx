@@ -31,8 +31,8 @@ const FAQS: FAQItem[] = [
   {
     id: 'faq-2',
     category: 'auth',
-    question: 'How does the Two-Step OTP Verification secure my citizen profile?',
-    answer: 'MahaSetu uses bank-grade Multi-Factor Authentication. When registering or logging in, a secure 6-digit One Time Password (OTP) is generated and dispatched to your registered email address. You must verify this OTP to complete your login session, preventing unauthorized account takeover.'
+    question: 'How is my citizen account secured?',
+    answer: 'MahaSetu securely hashes account passwords and uses time-limited signed sessions. Protected citizen services also enforce server-side authentication, role checks, rate limits, and ownership controls.'
   },
   {
     id: 'faq-3',
@@ -224,7 +224,7 @@ export const HelpPage: React.FC = () => {
               {[
                 { id: 'all', label: 'All Topics' },
                 { id: 'general', label: 'General' },
-                { id: 'auth', label: 'OTP & Auth' },
+                { id: 'auth', label: 'Account Security' },
                 { id: 'verification', label: 'Verification' },
                 { id: 'consent', label: 'DPDP Consent' },
                 { id: 'grievance', label: 'RTS Grievance' }
