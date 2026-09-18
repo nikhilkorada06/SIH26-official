@@ -17,7 +17,7 @@ export class UserRepository {
     name: string;
     email: string;
     password: string;
-    role?: string;
+    role?: 'admin' | 'department_officer' | 'citizen';
     isVerified?: boolean;
     dateOfBirth?: string;
     phone?: string;
